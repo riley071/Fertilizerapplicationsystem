@@ -1,3 +1,240 @@
-create a database name 
+# 🌱 Fertilizer Application System
 
-fertilizer_system
+
+A web-based system developed to digitize and streamline fertilizer certification, inventory management, order processing, delivery tracking, and payment handling .
+
+---
+
+## 📋 Table of Contents
+
+- [About the Project](#about-the-project)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [User Roles](#user-roles)
+- [Database Schema](#database-schema)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Author](#author)
+
+---
+
+
+## About the Project
+
+The Fertilizer Association of Malawi previously relied on manual, paper-based procedures for supplier certification, order management, and delivery coordination. This system replaces those processes with a centralized digital platform that improves efficiency, transparency, and accountability across the fertilizer supply chain.
+
+Key improvements over the previous system include:
+- Digital supplier certification with QR code verification
+- Automated route optimization for deliveries
+- Real-time GPS delivery tracking
+- Online card payments via Stripe
+- Automated invoicing and reporting
+
+---
+
+## Features
+
+### Admin
+- Manage users (add, activate, deactivate)
+- Issue and approve supplier certifications with QR code generation
+- Manage fertilizer inventory (add stock, adjust levels)
+- Process and approve orders, assign drivers
+- Track payments and update statuses
+- Generate reports and analytics
+- View audit logs
+- Messaging system
+
+### Supplier
+- Apply for certification digitally (via QR code link)
+- Place and track fertilizer orders
+- Make secure card payments (with 20% government subsidy applied)
+- Download invoices
+- Track deliveries in real time
+- Manage business locations
+- View reports
+
+### Driver
+- View and manage active deliveries
+- Update live GPS location during delivery
+- Use route optimization to find the most efficient delivery path
+- Mark deliveries as complete
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | PHP |
+| Database | MySQL (MySQLi) |
+| Frontend | HTML5, CSS3, JavaScript |
+| Payments | Stripe PHP SDK |
+| QR Codes | PHP QR Code Library |
+| GPS / Routing | Google Maps / Route Optimization API |
+| Session Handling | PHP Sessions |
+| Server | Apache (XAMPP recommended) |
+
+---
+
+## User Roles
+
+| Role | Description |
+|---|---|
+| `admin` | Full system control — manages users, certs, inventory, orders, payments |
+| `supplier` | Applies for certifications, places orders, makes payments, tracks deliveries |
+| `driver` | Views assigned deliveries, updates live location, marks deliveries complete |
+
+---
+
+## Database Schema
+
+The system uses the following core tables:
+
+- **users** — stores all user accounts with roles
+- **certifications** — supplier certification records and approval status
+- **inventory / fertilizers** — fertilizer stock with pricing and certification flags
+- **orders** — supplier orders linked to fertilizer and delivery records
+- **deliveries** — delivery assignments with driver and status tracking
+- **payments** — payment records linked to orders with Stripe session data
+- **invoices** — auto-generated invoices per order
+- **notifications** — system-generated alerts for key events
+- **qr_links** — QR code records for certification applications
+- **suppliers** — extended supplier profile data
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- PHP 7.4 or higher
+- MySQL 5.7 or higher
+- Apache web server (XAMPP is recommended for local development)
+- Composer (for Stripe PHP SDK)
+- A Stripe account (test keys are fine for development)
+
+---
+
+## Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/fertilizer-application-system.git
+   ```
+
+2. **Move the project to your server root**
+   ```bash
+   # For XAMPP on Windows:
+   mv fertilizer-application-system C:/xampp/htdocs/Fertilizerapplicationsystem
+   
+   # For XAMPP on Linux/Mac:
+   mv fertilizer-application-system /opt/lampp/htdocs/Fertilizerapplicationsystem
+   ```
+
+3. **Install Stripe PHP SDK via Composer**
+   ```bash
+   cd Fertilizerapplicationsystem
+   composer require stripe/stripe-php
+   ```
+
+4. **Import the database**
+   - Open phpMyAdmin (`http://localhost/phpmyadmin`)
+   - Create a new database named `fertilizer_db` (or your preferred name)
+   - Import the provided SQL file: `database/fertilizer_db.sql`
+
+5. **Configure the database connection**
+   - Open `includes/db.php`
+   - Update with your database credentials:
+     ```php
+     $conn = new mysqli("localhost", "root", "", "fertilizer_db");
+     ```
+
+6. **Configure Stripe keys**
+   - Open the payment processing file and replace the test API key with your own Stripe secret key:
+     ```php
+     \Stripe\Stripe::setApiKey('sk_test_YOUR_STRIPE_SECRET_KEY');
+     ```
+   - Update the `success_url` and `cancel_url` in the Stripe session to match your local or hosted domain.
+
+7. **Start Apache and MySQL** (via XAMPP Control Panel or terminal), then visit:
+   ```
+   http://localhost/Fertilizerapplicationsystem/
+   ```
+
+---
+
+## Usage
+
+### Accessing the System
+
+Navigate to the login page. Register as a new user or use existing admin credentials.
+
+| Default Role | How to Access |
+|---|---|
+| Admin | Created directly in the database or via the admin panel |
+| Supplier | Registers via the sign-up page |
+| Driver | Added by the admin through the Manage Users panel |
+
+### Typical Workflow
+
+1. **Admin** generates a QR code link for supplier certification.
+2. **Supplier** scans the QR code, submits certification documents digitally.
+3. **Admin** reviews and approves the certification.
+4. **Supplier** places an order for certified fertilizers.
+5. **Admin** approves the order and assigns a driver.
+6. **Driver** accepts the delivery, updates GPS location en route, and marks it complete.
+7. **Supplier** pays via Stripe card checkout (20% subsidy automatically applied).
+8. **System** auto-generates an invoice and sends notifications.
+
+---
+
+## Project Structure
+
+```
+Fertilizerapplicationsystem/
+├── includes/
+│   └── db.php                  # Database connection
+├── admin/
+│   ├── dashboard.php
+│   ├── users.php
+│   ├── certificates.php
+│   ├── inventory.php
+│   ├── orders.php
+│   ├── payments.php
+│   ├── reports.php
+│   ├── messages.php
+│   └── audit_logs.php
+├── supplier/
+│   ├── dashboard.php
+│   ├── apply_certificate.php
+│   ├── place_order.php
+│   ├── payment.php
+│   ├── track_delivery.php
+│   └── invoices.php
+├── driver/
+│   ├── dashboard.php
+│   ├── deliveries.php
+│   └── route_optimization.php
+├── stripe/
+│   └── init.php                # Stripe SDK initialization
+├── database/
+│   └── fertilizer_db.sql       # Database dump
+├── login.php
+├── register.php
+└── logout.php
+```
+
+---
+
+## Author
+
+**Emmanuel Matewere**
+
+
+---
+
+## License
+
+This project was developed as an undergraduate final year project. All rights reserved by the author.
