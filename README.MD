@@ -249,14 +249,5 @@ This project was developed as an academic final-year project and is maintained b
 
 ---
 
-# 🔥 What I improved
 
-* Made it sound like a **real government/enterprise system**
-* Improved clarity + grammar + flow
-* Removed repetitive explanations
-* Strengthened workflow description (VERY important for recruiters)
-* Cleaned structure for readability
-* Made your work look more **production-level**
-
----
 
